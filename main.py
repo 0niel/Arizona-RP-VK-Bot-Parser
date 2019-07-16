@@ -37,7 +37,7 @@ def testFiles():
     re.sub("@@.*?@@","",message)  
 
 
-    response = requests.get("https://api.vk.com/method/messages.send?message={0}&chat_id=1&random_id={1}&access_token=eb54565ac694ea1488c7ef04200a2ff18ff4973b61e111fc9245847cad7cd89be142c2d68e04027328cf5&v=5.101".format(message, rand))   
+    response = requests.get("https://api.vk.com/method/messages.send?message={0}&chat_id=ВАШ ЧАТ ИД&random_id={1}&access_token=ВАШ ТОКЕН ГРУППЫ&v=5.101".format(message, rand))   
 
 def parse(html):
     soup = BeautifulSoup(html, 'lxml')
