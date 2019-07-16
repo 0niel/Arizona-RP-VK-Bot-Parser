@@ -5,11 +5,18 @@ import re
 import random
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import difflib
 def get_html(url): #передаем URL
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
     
-    browser = webdriver.Chrome() # запускаем хром браузер с помощью драйвера селениум
+    browser = webdriver.Chrome(chrome_options=chrome_options) # запускаем хром браузер с помощью драйвера селениум
+   
     browser.get(url)             # открываем страницу с помощью URL
+
+    
+ 
 
     time.sleep(7)                # ждем 7 секунд для того, чтобы страница прогрузилась 
                                  # и прошла проверка на антиддос.
@@ -30,7 +37,7 @@ def testFiles():
     re.sub("@@.*?@@","",message)  
 
 
-    response = requests.get("https://api.vk.com/method/messages.send?message={0}&chat_id=YOUR CHATID&random_id={1}&access_token=YOUR GROUP TOKEN&v=5.101".format(message, rand))   
+    response = requests.get("https://api.vk.com/method/messages.send?message={0}&chat_id=1&random_id={1}&access_token=eb54565ac694ea1488c7ef04200a2ff18ff4973b61e111fc9245847cad7cd89be142c2d68e04027328cf5&v=5.101".format(message, rand))   
 
 def parse(html):
     soup = BeautifulSoup(html, 'lxml')
@@ -61,7 +68,7 @@ def parse(html):
     
 
 def main():
-    url = 'https://arizona-rp.com/mon/fraction/7/3' # ссылка на страницу мониторинга организации
+    url = 'https://arizona-rp.com/mon/fraction/7/3' # ссылка на страницу мониторинга
     for _ in range(24):
         html = get_html(url)
         parse(html)
