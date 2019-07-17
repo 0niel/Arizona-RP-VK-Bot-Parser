@@ -8,8 +8,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import difflib
 
-TOKEN = "ВАШ ТОКЕН"
-
 def get_html(url): #передаем URL
     chrome_options = Options()
     chrome_options.add_argument("headless")
@@ -33,7 +31,7 @@ def testFiles():
     message = message.replace("!", "Изменения в рангах: ")
     re.sub("@@.*?@@","",message)  
 
-    senChatMessage(message, 6)
+    sendChatMessage(message, 6)
 
 def onlineCheck(html):
     soup = BeautifulSoup(html, 'lxml')
@@ -58,8 +56,8 @@ def onlineCheck(html):
     my_file.close()
 
     message =  open('online.txt').read()
-    senChatMessage(message, 6)
     my_file.close()
+    sendChatMessage(message, 6)
 
 def parse(html):
     soup = BeautifulSoup(html, 'lxml')
@@ -87,9 +85,9 @@ def parse(html):
         os.remove('old.txt')                  # удаляем старый файл
         os.rename('new.txt', 'old.txt')       # записываем новый файл с содержимым рангов
 
-def senChatMessage(message, chatId):
-    rand = random.randint(199,88888888)       # генерируем случайное число для vkAPI
-    response = requests.get("https://api.vk.com/method/messages.send?message={0}&chat_id={1}&random_id={2}&access_token={3}&v=5.101".format(message, chatId, rand, TOKEN))
+def sendChatMessage(message, chatId):
+    TOKEN = "ВАШ ТОКЕН"
+    response = requests.get("https://api.vk.com/method/messages.send?message={0}&chat_id={1}&random_id={2}&access_token={3}&v=5.101".format(message, chatId, random.randint(199,88888888), TOKEN))
     return response
 
 def main():
