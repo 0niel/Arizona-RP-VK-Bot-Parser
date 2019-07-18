@@ -13,13 +13,13 @@ def get_html(url): #передаем URL
     chrome_options.add_argument("headless")
     browser = webdriver.Chrome(chrome_options=chrome_options) # запускаем хром браузер с помощью драйвера селениум
     browser.get(url)             # открываем страницу с помощью URL
-    time.sleep(5)                # ждем 7 секунд для того, чтобы страница прогрузилась 
+    time.sleep(5)                # ждем 5 секунд для того, чтобы страница прогрузилась 
                                  # и прошла проверка на антиддос.
     print(browser.current_url)
-    
+    browser.save_screenshot('screen.png') # save a screenshot to disk
     html = browser.page_source   # получаем HTML страницы
     browser.quit()               # выключаем браузер
-
+    
     return html                  # возвращем наш URL
 
 def testFiles():
@@ -37,26 +37,30 @@ def onlineCheck(html):
     soup = BeautifulSoup(html, 'lxml')
     tr = soup.find('tbody').find_all('tr')
     amount_chars = len(tr)-1
-    my_file = open("online.txt", "w")
+    rang_9 = 0
+    onlineList = ""
+
+    onlineRecord = 0
     for tds in tr:
         td = tds.find_all('td')
         nick = td[1]
+        rang = td[2]
         isOnline = td[3]
         
         nick = str(nick).replace("<td>", "").replace("</td>", "")
         isOnline = str(isOnline).replace("<td>", "").replace("</td>", "")
+        rang = str(rang).replace("<td>", "").replace("</td>", "")
         if nick == "Игрок":
             continue
         if isOnline == "Не в игре":
             continue
-        my_file.write('{0}:{1}\n'.format(nick, isOnline))
-        print ("{0}:{1}".format(nick, isOnline))
+        if rang == "9":
+            rang_9 += 1
 
-    my_file.write('\n\nВсего во фракции: {0}\n'.format(amount_chars))
-    my_file.close()
+        onlineRecord += 1
+        onlineList += 'Сотрудник {0}. Ранг: {1}\n'.format(nick, rang)
 
-    message =  open('online.txt').read()
-    my_file.close()
+    message = "Заместителей в сети: {0}, всего в сети: {1}/{2}.\n {3}".format(rang_9, onlineRecord, amount_chars, onlineList)
     sendChatMessage(message, 6)
 
 def parse(html):
