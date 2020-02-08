@@ -8,12 +8,16 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import difflib
 
+TOKEN = "ВАШ ТОКЕН"
+DELAY = 5
+CHAT_ID = 0
+
 def get_html(url): #передаем URL
     chrome_options = Options()
     chrome_options.add_argument("headless")
     browser = webdriver.Chrome(chrome_options=chrome_options) # запускаем хром браузер с помощью драйвера селениум
     browser.get(url)             # открываем страницу с помощью URL
-    time.sleep(5)                # ждем 5 секунд для того, чтобы страница прогрузилась 
+    time.sleep(DELAY)                # ждем 5 секунд для того, чтобы страница прогрузилась 
                                  # и прошла проверка на антиддос.
     print(browser.current_url)
     browser.save_screenshot('screen.png') # save a screenshot to disk
@@ -31,7 +35,7 @@ def testFiles():
     message = message.replace("!", "Изменения в рангах: ")
     re.sub("@@.*?@@","",message)  
 
-    sendChatMessage(message, 6)
+    sendChatMessage(message, CHAT_ID)
 
 def onlineCheck(html):
     soup = BeautifulSoup(html, 'lxml')
@@ -90,7 +94,6 @@ def parse(html):
         os.rename('new.txt', 'old.txt')       # записываем новый файл с содержимым рангов
 
 def sendChatMessage(message, chatId):
-    TOKEN = "ВАШ ТОКЕН"
     response = requests.get("https://api.vk.com/method/messages.send?message={0}&chat_id={1}&random_id={2}&access_token={3}&v=5.101".format(message, chatId, random.randint(199,88888888), TOKEN))
     return response
 
